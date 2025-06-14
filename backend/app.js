@@ -35,12 +35,12 @@ process.on("unhandledRejection", (reason, promise) => {
 const corsOptions = {
   origin: process.env.FRONTEND_URL || "http://localhost:5173",
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  exposedHeaders: ['set-cookie'],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  exposedHeaders: ["set-cookie"],
   optionsSuccessStatus: 200,
   preflightContinue: false,
-  maxAge: 86400 // 24 hours
+  maxAge: 86400, // 24 hours
 };
 app.use(cors(corsOptions));
 
@@ -58,6 +58,11 @@ app.use("/api/mealplan", mealplanRoutes);
 app.use("/api/recipes", recipeRoutes);
 app.use("/api/custom", customRoutes);
 app.use("/api/groq", groqRoutes); // ✅ Mounted Chatbot Endpoint
+
+// Root route for health check or welcome message
+app.get("/", (req, res) => {
+  res.send("Custom Crave Backend is running!");
+});
 
 // 404 Handler
 app.use((req, res, next) => {
