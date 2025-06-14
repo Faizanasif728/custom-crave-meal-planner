@@ -1,0 +1,29 @@
+@import "tailwindcss";
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
+
+
+html {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+html,
+body {
+  overscroll-behavior: none;
+}
+
+.mobile-nav-padding {
+  padding-bottom: 6rem;
+}
+
+@media (min-width: 768px) {
+  .mobile-nav-padding {
+    padding-bottom: 0;
+  }
+}
