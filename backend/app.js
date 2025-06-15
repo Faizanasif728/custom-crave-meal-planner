@@ -30,15 +30,21 @@ process.on("uncaughtException", (err) => {
 process.on("unhandledRejection", (reason, promise) => {
   console.error("Unhandled Promise Rejection:", reason);
 });
-// ...existing code...
-
 const allowedOrigins = [
   process.env.FRONTEND_URL,
   process.env.PRODUCTION_FRONTEND_URL,
 ];
 
 const corsOptions = {
-  origin: allowedOrigins,
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like server-to-server or curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -49,8 +55,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
-// ...existing code...
+app.options("*", cors(corsOptions));
 
 // Middleware
 app.use(logger("dev"));

@@ -10,7 +10,7 @@ import {
 import carrefourLogo from "../../src/assets/carrefour1.png";
 import fatahLogo from "../../src/assets/fatah.png";
 import darazLogo from "../../src/assets/daraz.jpg";
-import imtiazLogo from "../../src/assets/imtiaz.png";
+import imtiazLogo from "../../src/assets/imtiaz1.png";
 import metroLogo from "../../src/assets/metro.jpg";
 import naheedLogo from "../../src/assets/naheed.jpg";
 
@@ -51,7 +51,8 @@ const storeConfigs = {
   metro: {
     name: "Metro Online",
     logo: metroLogo,
-    searchEndpoint: "https://www.metro-online.pk/search/grocery?searchText=grocery&url=&isSearched=true",
+    searchEndpoint:
+      "https://www.metro-online.pk/search/grocery?searchText=grocery&url=&isSearched=true",
     description: "Wholesale grocery shopping made easy",
     rating: 4.4,
     deliveryTime: "2-4 days",
