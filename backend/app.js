@@ -31,8 +31,8 @@ process.on("unhandledRejection", (reason, promise) => {
   console.error("Unhandled Promise Rejection:", reason);
 });
 const allowedOrigins = [
-  process.env.FRONTEND_URL,
-  process.env.PRODUCTION_FRONTEND_URL,
+  "http://localhost:5173",
+  "https://custom-crave-meal-planner.vercel.app",
 ];
 
 const corsOptions = {
