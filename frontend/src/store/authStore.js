@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import axios from "../api";
 import { toast } from "react-toastify";
+import { signOut } from "firebase/auth";
+import { auth } from "../config/firebaseConfig";
 
 // Add axios interceptor for session expiration
 let isSessionExpired = false;
@@ -37,6 +39,8 @@ const useAuthStore = create((set) => ({
     profileImage: user?.profileImage || null 
   }),
 
+  setLoading: (loading) => set({ isLoading: loading }),
+
   setProfileImage: (profileImage) => set((state) => ({
     profileImage,
     user: state.user ? { ...state.user, profileImage } : null
@@ -54,6 +58,8 @@ const useAuthStore = create((set) => ({
           isLoading: false,
           profileImage: data.user.profileImage || null 
         });
+      } else {
+        set({ user: null, isAuthenticated: false, isLoading: false, profileImage: null });
       }
     } catch (error) {
       console.error("Error fetching user:", error);
@@ -63,7 +69,13 @@ const useAuthStore = create((set) => ({
 
   logout: async () => {
     try {
+      // Call backend logout API
       await axios.post("/auth/logout", {}, { withCredentials: true });
+
+      // Sign out from Firebase (if applicable)
+      await signOut(auth);
+
+      // Clear Zustand state
       set({ user: null, isAuthenticated: false, profileImage: null });
     } catch (error) {
       console.error("Logout error:", error);
@@ -119,6 +131,24 @@ const useAuthStore = create((set) => ({
     } catch (err) {
       console.error("Error deleting profile image:", err);
       throw new Error("Failed to delete profile image");
+    }
+  },
+
+  deleteUser: async () => {
+    try {
+      // Call backend API to delete user
+      await axios.delete("/users/delete-user", { withCredentials: true });
+
+      // Sign out from Firebase (if applicable)
+      await signOut(auth);
+
+      // Clear Zustand state
+      set({ user: null, isAuthenticated: false, profileImage: null });
+
+      console.log("User deleted successfully.");
+    } catch (err) {
+      console.error("Error deleting user:", err);
+      throw new Error("Failed to delete user. Please try again.");
     }
   },
 

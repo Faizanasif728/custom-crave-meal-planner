@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import axios from "../api";
 import { useNavigate } from "react-router-dom";
-import useAuthStore from "../store/authStore.jsx";
+import useAuthStore from "../store/authStore";
 import { motion } from "framer-motion";
 import { signOut } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
