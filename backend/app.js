@@ -79,6 +79,16 @@ app.get("/", (req, res) => {
   res.send("Custom Crave Backend is running!");
 });
 
+// Test route to check environment variables
+app.get("/api/test-env", (req, res) => {
+  res.json({
+    nodeEnv: process.env.NODE_ENV,
+    cookieDomain: process.env.COOKIE_DOMAIN,
+    frontendUrl: process.env.PRODUCTION_FRONTEND_URL,
+    // Don't send sensitive data like SECRET or MONGODB_URI
+  });
+});
+
 // 404 Handler
 app.use((req, res, next) => {
   next(createError(404, "Resource not found"));
