@@ -79,6 +79,18 @@ app.get("/", (req, res) => {
   res.send("Custom Crave Backend is running!");
 });
 
+// Test route to check environment and server status
+app.get("/api/test-server", (req, res) => {
+  res.json({
+    status: "Server is running",
+    nodeEnv: process.env.NODE_ENV,
+    cookieDomain: process.env.COOKIE_DOMAIN,
+    frontendUrl: process.env.PRODUCTION_FRONTEND_URL,
+    corsOrigins: allowedOrigins,
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Test route to check environment variables
 app.get("/api/test-env", (req, res) => {
   res.json({
