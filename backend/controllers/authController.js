@@ -34,15 +34,6 @@ exports.login = async (req, res) => {
         .json({ success: false, message: "Invalid email format" });
     }
 
-    // Check MongoDB connection
-    if (!mongoose.connection.readyState) {
-      console.error("MongoDB not connected");
-      return res.status(500).json({ 
-        success: false, 
-        message: "Database connection error" 
-      });
-    }
-
     const user = await User.findOne({ email });
     if (!user) {
       return res
@@ -63,14 +54,6 @@ exports.login = async (req, res) => {
       return res
         .status(400)
         .json({ success: false, message: "Invalid credentials" });
-    }
-
-    if (!process.env.SECRET) {
-      console.error("JWT SECRET not configured");
-      return res.status(500).json({ 
-        success: false, 
-        message: "Server configuration error" 
-      });
     }
 
     const token = jwt.sign(
@@ -95,12 +78,7 @@ exports.login = async (req, res) => {
     });
   } catch (error) {
     console.error("Error in login:", error);
-    // Send more specific error message
-    res.status(500).json({ 
-      success: false, 
-      message: error.message || "Login failed",
-      error: process.env.NODE_ENV === "development" ? error.stack : undefined
-    });
+    res.status(500).json({ success: false, message: "Login failed" });
   }
 };
 

@@ -295,103 +295,103 @@ const Navbar = ({
         // <>
         //   {console.log("Sidebar profileImage:", profileImage)}
         //   {console.log("Sidebar user:", user)}
-          <div
-            ref={sidebarRef}
-            className={`fixed top-0 right-0 h-full w-[320px] bg-gray-100 text-white z-[60] shadow-lg transform transition-transform duration-300 ease-in-out ${
-              isSidebarOpen ? "translate-x-0" : "translate-x-full"
-            }`}
-          >
-            <div className="flex flex-col justify-between h-full p-6">
-              {/* Close */}
-              <button
-                onClick={() => setIsSidebarOpen(false)}
-                className="absolute top-4 right-4 text-gray-600 hover:text-black transition-colors duration-200"
-              >
-                <X className="w-6 h-6" />
-              </button>
+        <div
+          ref={sidebarRef}
+          className={`fixed top-0 right-0 h-full w-[320px] bg-gray-100 text-white z-[200] shadow-lg transform transition-transform duration-300 ease-in-out ${
+            isSidebarOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+        >
+          <div className="flex flex-col justify-between h-full p-6">
+            {/* Close */}
+            <button
+              onClick={() => setIsSidebarOpen(false)}
+              className="absolute top-4 right-4 text-gray-600 hover:text-black transition-colors duration-200"
+            >
+              <X className="w-6 h-6" />
+            </button>
 
-              {/* Profile */}
-              <div>
-                <div className="flex items-center gap-4 mb-6">
-                  <label
-                    htmlFor="profileImageUpload"
-                    className="cursor-pointer group"
-                  >
-                    <div className="relative">
-                      {profileImage ? (
-                        <div className="relative group">
-                          <img
-                            src={profileImage}
-                            alt="Profile"
-                            className={`w-14 h-14 rounded-full object-cover border-2 border-white shadow-md transition-all duration-300 ${
-                              isUploading
-                                ? "opacity-50 grayscale"
-                                : "group-hover:opacity-80"
-                            }`}
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-14 h-14 rounded-full bg-orange-500 flex items-center justify-center border-2 border-white shadow-md">
-                          <span className="text-2xl font-bold text-white">
-                            {user?.username?.charAt(0).toUpperCase()}
-                          </span>
-                        </div>
-                      )}
-                      {isUploading && (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="w-6 h-6 border-2 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
-                        </div>
-                      )}
-                    </div>
-                    <input
-                      type="file"
-                      id="profileImageUpload"
-                      className="hidden"
-                      onChange={handleImageUpload}
-                      disabled={isUploading}
-                      accept="image/jpeg,image/png,image/webp"
-                    />
-                  </label>
-                  <div>
-                    <p className="text-lg font-bold text-black">
-                      {user?.username}
-                    </p>
-                    <p className="text-sm text-gray-500">{user?.email}</p>
+            {/* Profile */}
+            <div>
+              <div className="flex items-center gap-4 mb-6">
+                <label
+                  htmlFor="profileImageUpload"
+                  className="cursor-pointer group"
+                >
+                  <div className="relative">
+                    {profileImage ? (
+                      <div className="relative group">
+                        <img
+                          src={profileImage}
+                          alt="Profile"
+                          className={`w-14 h-14 rounded-full object-cover border-2 border-white shadow-md transition-all duration-300 ${
+                            isUploading
+                              ? "opacity-50 grayscale"
+                              : "group-hover:opacity-80"
+                          }`}
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-14 h-14 rounded-full bg-orange-500 flex items-center justify-center border-2 border-white shadow-md">
+                        <span className="text-2xl font-bold text-white">
+                          {user?.username?.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                    )}
+                    {isUploading && (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-6 h-6 border-2 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+                      </div>
+                    )}
                   </div>
+                  <input
+                    type="file"
+                    id="profileImageUpload"
+                    className="hidden"
+                    onChange={handleImageUpload}
+                    disabled={isUploading}
+                    accept="image/jpeg,image/png,image/webp"
+                  />
+                </label>
+                <div>
+                  <p className="text-lg font-bold text-black">
+                    {user?.username}
+                  </p>
+                  <p className="text-sm text-gray-500">{user?.email}</p>
                 </div>
-
-                <hr className="border-gray-300 my-4" />
-
-                {/* Sidebar Links */}
-                <ul className="space-y-4">
-                  {sidebarLinks.map(({ to, label, icon }) => (
-                    <li key={to}>
-                      <Link
-                        to={to}
-                        className="flex items-center space-x-3 text-black hover:text-orange-500 transition-colors duration-200"
-                        onClick={() => setIsSidebarOpen(false)}
-                      >
-                        <span className="text-lg">{icon}</span>
-                        <span>{label}</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
               </div>
 
               <hr className="border-gray-300 my-4" />
 
-              {/* Logout */}
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="flex items-center space-x-2 text-red-600 font-semibold hover:text-red-700 transition-colors duration-200"
-              >
-                <FiLogOut className="text-lg" />
-                <span>Log Out</span>
-              </button>
+              {/* Sidebar Links */}
+              <ul className="space-y-4">
+                {sidebarLinks.map(({ to, label, icon }) => (
+                  <li key={to}>
+                    <Link
+                      to={to}
+                      className="flex items-center space-x-3 text-black hover:text-orange-500 transition-colors duration-200"
+                      onClick={() => setIsSidebarOpen(false)}
+                    >
+                      <span className="text-lg">{icon}</span>
+                      <span>{label}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
+
+            <hr className="border-gray-300 my-4" />
+
+            {/* Logout */}
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="flex items-center space-x-2 text-red-600 font-semibold hover:text-red-700 transition-colors duration-200"
+            >
+              <FiLogOut className="text-lg" />
+              <span>Log Out</span>
+            </button>
           </div>
-          // </>
+        </div>
+        // </>
       )}
 
       {/* Logout Confirmation Modal */}
