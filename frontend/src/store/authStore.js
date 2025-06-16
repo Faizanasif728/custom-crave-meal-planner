@@ -58,12 +58,16 @@ const useAuthStore = create((set) => ({
           isLoading: false,
           profileImage: data.user.profileImage || null 
         });
+        return true;
       } else {
         set({ user: null, isAuthenticated: false, isLoading: false, profileImage: null });
+        return false;
       }
     } catch (error) {
       console.error("Error fetching user:", error);
+      // Always set isLoading to false, regardless of error type
       set({ user: null, isAuthenticated: false, isLoading: false, profileImage: null });
+      return false;
     }
   },
 

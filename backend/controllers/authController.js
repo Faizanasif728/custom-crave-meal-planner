@@ -64,7 +64,7 @@ exports.login = async (req, res) => {
     res.cookie("auth", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      sameSite: "none",
       path: "/",
       maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
       domain: process.env.NODE_ENV === "production" ? process.env.COOKIE_DOMAIN : undefined
@@ -119,7 +119,7 @@ exports.googleLogin = async (req, res) => {
       res.cookie("auth", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        sameSite: "none",
         path: "/",
         maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
         domain: process.env.NODE_ENV === "production" ? process.env.COOKIE_DOMAIN : undefined

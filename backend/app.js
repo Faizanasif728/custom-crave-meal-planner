@@ -49,11 +49,13 @@ const corsOptions = {
   },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: ["Content-Type", "Authorization", "Accept"],
   exposedHeaders: ["set-cookie"],
   optionsSuccessStatus: 200,
   preflightContinue: false,
   maxAge: 86400,
+  sameSite: "none",
+  secure: true
 };
 
 app.use(cors(corsOptions));
