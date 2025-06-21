@@ -122,7 +122,7 @@ const Footer = () => {
             href="mailto:info@customcrave.com"
             className="text-gray-600 hover:text-orange-500 transition"
           >
-            customcrave76@gmail.com
+            info@customcrave.com
           </a>
         </div>
       </div>

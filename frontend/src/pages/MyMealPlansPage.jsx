@@ -15,7 +15,9 @@ const AccordionSection = ({ title, children, isOpen, toggle }) => (
   <div className="mb-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
     <button
       onClick={toggle}
-      className="w-full flex justify-between items-center px-6 py-4 text-left text-orange-500 font-bold transition duration-300 hover:bg-orange-50 rounded-lg"
+      className={`w-full flex justify-between items-center px-6 py-4 text-left text-orange-500 font-bold transition duration-300 rounded-lg ${
+        !isOpen ? 'hover:bg-orange-50' : ''
+      }`}
     >
       <div className="flex items-center gap-2">
         <FaInfoCircle className="text-orange-400" />
