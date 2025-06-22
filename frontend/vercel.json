@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://custom-crave-meal-planner-backend.vercel.app/api/$1"
+      "destination": "https://custom-crave-meal-planner.vercel.app/api/$1"
     },
     {
       "source": "/(.*)",
