@@ -14,7 +14,6 @@ if (!admin.apps.length) {
   });
 }
 
-// Email validation regex
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // 🔹 Login User
