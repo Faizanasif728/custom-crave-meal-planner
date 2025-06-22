@@ -77,6 +77,10 @@ exports.login = async (req, res) => {
       console.log("🍪 [PROD] COOKIE_DOMAIN:", process.env.COOKIE_DOMAIN);
     }
     res.cookie("auth", token, cookieOptions);
+    if (isProd) {
+      console.log("🍪 [PROD] res.cookie called for auth. Checking res.getHeaders()...");
+      console.log("🍪 [PROD] Response headers after setting cookie:", res.getHeaders());
+    }
 
     res.status(200).json({
       success: true,
@@ -182,6 +186,10 @@ exports.googleLogin = async (req, res) => {
         console.log("🍪 [PROD] COOKIE_DOMAIN:", process.env.COOKIE_DOMAIN);
       }
       res.cookie("auth", token, cookieOptions);
+      if (isProd) {
+        console.log("🍪 [PROD] res.cookie called for auth. Checking res.getHeaders()...");
+        console.log("🍪 [PROD] Response headers after setting cookie:", res.getHeaders());
+      }
       console.log("✅ Auth cookie set");
 
       const finalProfileImage = userProfile?.profileImage || null;

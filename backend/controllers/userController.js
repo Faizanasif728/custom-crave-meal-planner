@@ -84,6 +84,10 @@ exports.createUser = async (req, res) => {
       console.log("🍪 [PROD] COOKIE_DOMAIN:", process.env.COOKIE_DOMAIN);
     }
     res.cookie("auth", token, cookieOptions);
+    if (isProd) {
+      console.log("🍪 [PROD] res.cookie called for auth. Checking res.getHeaders()...");
+      console.log("🍪 [PROD] Response headers after setting cookie:", res.getHeaders());
+    }
 
     res.status(201).json({
       success: true,
@@ -638,6 +642,10 @@ exports.googleSignup = async (req, res) => {
       console.log("🍪 [PROD] COOKIE_DOMAIN:", process.env.COOKIE_DOMAIN);
     }
     res.cookie("auth", token, cookieOptions);
+    if (isProd) {
+      console.log("🍪 [PROD] res.cookie called for auth. Checking res.getHeaders()...");
+      console.log("🍪 [PROD] Response headers after setting cookie:", res.getHeaders());
+    }
     console.log("✅ Auth cookie set");
 
     console.log("🎉 Google Signup completed successfully!");
