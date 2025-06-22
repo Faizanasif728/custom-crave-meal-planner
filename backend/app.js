@@ -36,29 +36,48 @@ const allowedOrigins = [
 ];
 
 const corsOptions = {
-  // origin: function (origin, callback) {
-  //   // console.log("CORS request from:", origin);
-  //   // console.log("Allowed origins:", allowedOrigins);
-  //   // Allow requests with no origin (like server-to-server or curl)
-  //   if (!origin) return callback(null, true);
-  //   if (allowedOrigins.includes(origin)) {
-  //     return callback(null, true);
-  //   } else {
-  //     return callback(new Error("Not allowed by CORS"));
-  //   }
-  // },
-  origin: allowedOrigins,
+  origin: function (origin, callback) {
+    console.log("CORS request from:", origin);
+    console.log("Allowed origins:", allowedOrigins);
+    // Allow requests with no origin (like server-to-server, mobile apps, or curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      console.error("CORS blocked origin:", origin);
+      return callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "Accept"],
-  exposedHeaders: ["set-cookie"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+  allowedHeaders: [
+    "Origin",
+    "X-Requested-With", 
+    "Content-Type", 
+    "Authorization", 
+    "Accept",
+    "Cookie",
+    "Set-Cookie",
+    "X-HTTP-Method-Override"
+  ],
+  exposedHeaders: ["Set-Cookie"],
   optionsSuccessStatus: 200,
-  // preflightContinue: false,
-
+  preflightContinue: false,
+  maxAge: 86400, // 24 hours preflight cache
 };
 
 app.use(cors(corsOptions));
-// app.options("*", cors(corsOptions));
+app.options("*", cors(corsOptions)); // Handle preflight requests
+
+// Cookie debugging middleware (for production troubleshooting)
+app.use((req, res, next) => {
+  if (process.env.NODE_ENV === "production") {
+    console.log(`🔍 [${req.method}] ${req.path}`);
+    console.log("🔍 Headers:", JSON.stringify(req.headers, null, 2));
+    console.log("🔍 Cookies:", req.cookies);
+  }
+  next();
+});
 
 // Middleware
 app.use(logger("dev"));
