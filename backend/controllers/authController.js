@@ -66,7 +66,7 @@ exports.login = async (req, res) => {
     const cookieOptions = {
       httpOnly: true,
       secure: isProd,
-      sameSite: isProd ? "none" : "lax",
+      sameSite: isProd ? "None" : "Lax",
       path: "/",
       maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
       domain: isProd ? process.env.COOKIE_DOMAIN : undefined
@@ -171,7 +171,7 @@ exports.googleLogin = async (req, res) => {
       const cookieOptions = {
         httpOnly: true,
         secure: isProd,
-        sameSite: isProd ? "none" : "lax",
+        sameSite: isProd ? "None" : "Lax",
         path: "/",
         maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
         domain: isProd ? process.env.COOKIE_DOMAIN : undefined
