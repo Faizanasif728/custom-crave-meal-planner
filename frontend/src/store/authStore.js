@@ -58,6 +58,7 @@ const useAuthStore = create((set) => ({
   fetchUser: async () => {
     if (import.meta.env.MODE === "production") {
       console.log("🟠 [PROD] fetchUser called");
+      console.log("🟠 [PROD] Document.cookie before API call:", document.cookie);
     }
     try {
       const { data } = await api.get("/auth/get-profile", {
@@ -92,6 +93,8 @@ const useAuthStore = create((set) => ({
       if (import.meta.env.MODE === "production") {
         console.error("🟠 [PROD] Error fetching user:", error);
         console.error("🟠 [PROD] Error response:", error.response?.data);
+        console.error("🟠 [PROD] Error status:", error.response?.status);
+        console.log("🟠 [PROD] Document.cookie during error:", document.cookie);
       }
       set({ user: null, isAuthenticated: false, isLoading: false, profileImage: null });
       return false;

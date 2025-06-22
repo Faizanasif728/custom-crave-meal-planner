@@ -2,8 +2,12 @@ import axios from "axios";
 
 const baseURL =
   import.meta.env.MODE === "production"
-    ? import.meta.env.VITE_API_URL_PRODUCTION
+    ? "https://custom-crave-meal-planner-backend.vercel.app"
     : import.meta.env.VITE_API_URL_LOCAL;
+
+if (import.meta.env.MODE === "production") {
+  console.log("🟠 [PROD] Using backend URL:", baseURL);
+}
 
 const api = axios.create({
   baseURL,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import api from "../api";
@@ -49,7 +49,9 @@ const Signup = () => {
         if (data.user) {
           useAuthStore.getState().setUser(data.user);
         } else {
-          await fetchUser();
+          setTimeout(async () => {
+            await fetchUser();
+          }, 100);
         }
         if (import.meta.env.MODE === "production") {
           console.log("🟠 [PROD] Redirecting to home after manual signup");
@@ -106,7 +108,9 @@ const Signup = () => {
         if (data.user) {
           useAuthStore.getState().setUser(data.user);
         }
-        await fetchUser();
+        setTimeout(async () => {
+          await fetchUser();
+        }, 100);
         if (import.meta.env.MODE === "production") {
           console.log("🟠 [PROD] Redirecting to home after Google signup");
         }

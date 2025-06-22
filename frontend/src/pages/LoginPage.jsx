@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import api from "../api";
@@ -45,7 +45,9 @@ const Login = () => {
       if (data?.success) {
         toast.success("Login successful!");
         setUser(data.user);
-        await fetchUser();
+        setTimeout(async () => {
+          await fetchUser();
+        }, 100);
         setFormData({ email: "", password: "" });
         if (import.meta.env.MODE === "production") {
           console.log("🟠 [PROD] Redirecting to home after manual login");
@@ -100,7 +102,9 @@ const Login = () => {
       }
       if (data?.success) {
         toast.success(data.message || "Google authentication successful!");
-        await fetchUser();
+        setTimeout(async () => {
+          await fetchUser();
+        }, 100);
         if (import.meta.env.MODE === "production") {
           console.log("🟠 [PROD] Redirecting to home after Google login");
         }
@@ -132,7 +136,7 @@ const Login = () => {
             Welcome Back
           </h2>
           <p className="text-sm text-gray-400">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link
               to="/signup"
               className="text-orange-400 hover:text-yellow-400 font-semibold"
