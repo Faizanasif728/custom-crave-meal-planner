@@ -62,15 +62,16 @@ exports.login = async (req, res) => {
       { expiresIn: "15d" }
     );
 
+    const isProd = process.env.NODE_ENV === "production";
     const cookieOptions = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "none",
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
       path: "/",
       maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
-      domain: process.env.NODE_ENV === "production" ? process.env.COOKIE_DOMAIN : undefined
+      domain: isProd ? process.env.COOKIE_DOMAIN : undefined
     };
-    if (process.env.NODE_ENV === "production") {
+    if (isProd) {
       console.log("🍪 [PROD] Setting cookie (manual login):", cookieOptions);
       console.log("🍪 [PROD] Token:", token);
       console.log("🍪 [PROD] COOKIE_DOMAIN:", process.env.COOKIE_DOMAIN);
@@ -166,15 +167,16 @@ exports.googleLogin = async (req, res) => {
       );
       console.log("✅ JWT token generated");
 
+      const isProd = process.env.NODE_ENV === "production";
       const cookieOptions = {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "none",
+        secure: isProd,
+        sameSite: isProd ? "none" : "lax",
         path: "/",
         maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
-        domain: process.env.NODE_ENV === "production" ? process.env.COOKIE_DOMAIN : undefined
+        domain: isProd ? process.env.COOKIE_DOMAIN : undefined
       };
-      if (process.env.NODE_ENV === "production") {
+      if (isProd) {
         console.log("🍪 [PROD] Setting cookie (Google login):", cookieOptions);
         console.log("🍪 [PROD] Token:", token);
         console.log("🍪 [PROD] COOKIE_DOMAIN:", process.env.COOKIE_DOMAIN);
