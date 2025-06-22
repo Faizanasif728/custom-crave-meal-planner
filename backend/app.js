@@ -32,7 +32,7 @@ process.on("unhandledRejection", (reason, promise) => {
 });
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://custom-crave-meal-planner.vercel.app",
+  "https://custom-crave.netlify.app/",
 ];
 
 const corsOptions = {
