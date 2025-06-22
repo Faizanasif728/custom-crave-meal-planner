@@ -76,7 +76,8 @@ exports.createUser = async (req, res) => {
       sameSite: isProd ? "None" : "Lax",
       path: "/",
       maxAge: 15 * 24 * 60 * 60 * 1000,
-      domain: isProd ? process.env.COOKIE_DOMAIN : undefined
+      // Don't set domain for cross-origin cookies - let browser handle it
+      ...(isProd && process.env.COOKIE_DOMAIN ? { domain: process.env.COOKIE_DOMAIN } : {})
     };
     if (isProd) {
       console.log("🍪 [PROD] Setting cookie (manual signup):", cookieOptions);
@@ -305,7 +306,16 @@ exports.deleteUser = async (req, res) => {
     await User.deleteOne({ _id: req.user._id });
 
     // Clear the authentication cookie
-    res.clearCookie("auth");
+    const isProd = process.env.NODE_ENV === "production";
+    const clearCookieOptions = {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? "None" : "Lax",
+      path: "/",
+      // Don't set domain for cross-origin cookies - let browser handle it
+      ...(isProd && process.env.COOKIE_DOMAIN ? { domain: process.env.COOKIE_DOMAIN } : {})
+    };
+    res.clearCookie("auth", clearCookieOptions);
     res
       .status(200)
       .json({ message: "User and associated profile deleted successfully" });
@@ -634,7 +644,8 @@ exports.googleSignup = async (req, res) => {
       sameSite: isProd ? "None" : "Lax",
       path: "/",
       maxAge: 15 * 24 * 60 * 60 * 1000,
-      domain: isProd ? process.env.COOKIE_DOMAIN : undefined
+      // Don't set domain for cross-origin cookies - let browser handle it
+      ...(isProd && process.env.COOKIE_DOMAIN ? { domain: process.env.COOKIE_DOMAIN } : {})
     };
     if (isProd) {
       console.log("🍪 [PROD] Setting cookie (Google signup):", cookieOptions);
