@@ -167,6 +167,19 @@ const CalorieNutrientResultPage = () => {
                       }
                     </p>
                   </div>
+                  {/* NEW: Actual Nutrient Box */}
+                  {location.state?.nutrient?.type && (
+                    <div className="bg-white p-3 rounded-lg shadow-sm">
+                      <p className="font-semibold text-orange-500">
+                        Actual {location.state.nutrient.type.charAt(0).toUpperCase() + location.state.nutrient.type.slice(1)}
+                      </p>
+                      <p>
+                        {result.nutrients && result.nutrients[location.state.nutrient.type] !== undefined
+                          ? `${result.nutrients[location.state.nutrient.type]}${['sodium', 'cholesterol'].includes(location.state.nutrient.type) ? 'mg' : 'g'}`
+                          : 'Not available'}
+                      </p>
+                    </div>
+                  )}
                   <div className="bg-white p-3 rounded-lg shadow-sm">
                     <p className="font-semibold text-orange-500">Actual Calories</p>
                     <p>{result.calories} kcal</p>

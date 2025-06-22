@@ -263,6 +263,19 @@ const CustomRecipesPage = () => {
                               }
                             </p>
                           </div>
+                          {/* NEW: Actual Nutrient Box */}
+                          {meal.nutrientType && (
+                            <div className="bg-white p-3 rounded-lg shadow-sm">
+                              <p className="font-semibold text-orange-500">
+                                Actual {meal.nutrientType.charAt(0).toUpperCase() + meal.nutrientType.slice(1)}
+                              </p>
+                              <p>
+                                {meal.nutrients && meal.nutrients[meal.nutrientType] !== undefined
+                                  ? `${meal.nutrients[meal.nutrientType]}${['sodium', 'cholesterol'].includes(meal.nutrientType) ? 'mg' : 'g'}`
+                                  : 'Not available'}
+                              </p>
+                            </div>
+                          )}
                         </>
                       )}
 

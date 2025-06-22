@@ -4,6 +4,10 @@ const User = require("../models/users");
 // Middleware to authenticate the user
 const authenticateUser = async (req, res, next) => {
   try {
+    if (process.env.NODE_ENV === "production") {
+      console.log("🔍 [PROD] Incoming headers.cookie:", req.headers.cookie);
+      console.log("🔍 [PROD] req.cookies:", req.cookies);
+    }
     console.log("🔵 AuthMiddleware: Starting authentication...");
     const token = req.cookies.auth;
     if (!token) {
@@ -15,6 +19,9 @@ const authenticateUser = async (req, res, next) => {
 
     console.log("🔵 AuthMiddleware: Token found, verifying...");
     const decoded = jwt.verify(token, process.env.SECRET);
+    if (process.env.NODE_ENV === "production") {
+      console.log("🔍 [PROD] Decoded token:", decoded);
+    }
     console.log("🔵 AuthMiddleware: Token decoded, user ID:", decoded._id);
     
     const user = await User.findById(decoded._id);

@@ -33,17 +33,19 @@ const useAuthStore = create((set) => ({
   profileImage: null,
 
   setUser: (user) => {
-    console.log("🔵 AuthStore: setUser called with:", user);
-    console.log("🔵 AuthStore: Profile image in user data:", user?.profileImage);
-    
+    if (import.meta.env.MODE === "production") {
+      console.log("🟠 [PROD] setUser called with:", user);
+      console.log("🟠 [PROD] Profile image in user data:", user?.profileImage);
+    }
     set({ 
       user, 
       isAuthenticated: true, 
       isLoading: false,
       profileImage: user?.profileImage || null 
     });
-    
-    console.log("✅ AuthStore: User state set successfully");
+    if (import.meta.env.MODE === "production") {
+      console.log("🟠 [PROD] User state set successfully");
+    }
   },
 
   setLoading: (loading) => set({ isLoading: loading }),
@@ -54,35 +56,43 @@ const useAuthStore = create((set) => ({
   })),
 
   fetchUser: async () => {
-    console.log("🔵 AuthStore: fetchUser called");
+    if (import.meta.env.MODE === "production") {
+      console.log("🟠 [PROD] fetchUser called");
+    }
     try {
       const { data } = await axios.get("/auth/get-profile", {
         withCredentials: true,
       });
-      console.log("🔵 AuthStore: API response:", data);
-      
+      if (import.meta.env.MODE === "production") {
+        console.log("🟠 [PROD] API response from /auth/get-profile:", data);
+      }
       if (data?.user) {
-        console.log("🔵 AuthStore: User data received:", data.user);
-        console.log("🔵 AuthStore: Profile image from API:", data.user.profileImage);
-        
+        if (import.meta.env.MODE === "production") {
+          console.log("🟠 [PROD] User data received:", data.user);
+          console.log("🟠 [PROD] Profile image from API:", data.user.profileImage);
+        }
         set({ 
           user: data.user, 
           isAuthenticated: true, 
           isLoading: false,
           profileImage: data.user.profileImage || null 
         });
-        
-        console.log("✅ AuthStore: User state updated successfully");
+        if (import.meta.env.MODE === "production") {
+          console.log("🟠 [PROD] User state updated successfully");
+        }
         return true;
       } else {
-        console.log("❌ AuthStore: No user data in response");
+        if (import.meta.env.MODE === "production") {
+          console.log("🟠 [PROD] No user data in response");
+        }
         set({ user: null, isAuthenticated: false, isLoading: false, profileImage: null });
         return false;
       }
     } catch (error) {
-      console.error("❌ AuthStore: Error fetching user:", error);
-      console.error("❌ AuthStore: Error response:", error.response?.data);
-      // Always set isLoading to false, regardless of error type
+      if (import.meta.env.MODE === "production") {
+        console.error("🟠 [PROD] Error fetching user:", error);
+        console.error("🟠 [PROD] Error response:", error.response?.data);
+      }
       set({ user: null, isAuthenticated: false, isLoading: false, profileImage: null });
       return false;
     }

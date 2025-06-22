@@ -38,12 +38,18 @@ const Login = () => {
           withCredentials: true,
         }
       );
-
+      if (import.meta.env.MODE === "production") {
+        console.log("🟠 [PROD] Manual login response:", data);
+        console.log("🟠 [PROD] Document.cookie after login:", document.cookie);
+      }
       if (data?.success) {
         toast.success("Login successful!");
         setUser(data.user);
         await fetchUser();
         setFormData({ email: "", password: "" });
+        if (import.meta.env.MODE === "production") {
+          console.log("🟠 [PROD] Redirecting to home after manual login");
+        }
         navigate("/");
       } else {
         toast.error(data?.message || "Invalid login credentials.");
@@ -58,23 +64,46 @@ const Login = () => {
   };
 
   const handleGoogleLogin = async () => {
+    if (import.meta.env.MODE === "production") {
+      console.log("🟠 [PROD] Starting Google login process...");
+    }
     setGoogleLoading(true);
     setManualLoading(false);
 
     try {
+      if (import.meta.env.MODE === "production") {
+        console.log("🟠 [PROD] Calling Firebase signInWithPopup...");
+      }
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
       const tokenId = await user.getIdToken();
 
+      if (import.meta.env.MODE === "production") {
+        console.log("🟠 [PROD] Firebase user data:", {
+          email: user.email,
+          displayName: user.displayName,
+          photoURL: user.photoURL
+        });
+      }
+
+      if (import.meta.env.MODE === "production") {
+        console.log("🟠 [PROD] Calling backend google-login API...");
+      }
       const { data } = await axios.post(
         "/auth/google-login",
         { tokenId, rememberMe },
         { withCredentials: true }
       );
-
+      if (import.meta.env.MODE === "production") {
+        console.log("🟠 [PROD] Backend response:", data);
+        console.log("🟠 [PROD] Document.cookie after Google login:", document.cookie);
+      }
       if (data?.success) {
         toast.success(data.message || "Google authentication successful!");
         await fetchUser();
+        if (import.meta.env.MODE === "production") {
+          console.log("🟠 [PROD] Redirecting to home after Google login");
+        }
         navigate("/");
       } else {
         toast.error(data?.message || "Google authentication failed.");

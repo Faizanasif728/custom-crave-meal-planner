@@ -39,19 +39,21 @@ const Signup = () => {
       const { data } = await axios.post("/users/create-user", formData, {
         withCredentials: true,
       });
-
+      if (import.meta.env.MODE === "production") {
+        console.log("🟠 [PROD] Manual signup response:", data);
+        console.log("🟠 [PROD] Document.cookie after signup:", document.cookie);
+      }
       if (data?.success) {
         toast.success("Registration successful!");
         setFormData({ username: "", email: "", password: "" });
-        
-        // Set authentication state immediately
         if (data.user) {
           useAuthStore.getState().setUser(data.user);
         } else {
-          // If user data is not in response, fetch it
           await fetchUser();
         }
-        
+        if (import.meta.env.MODE === "production") {
+          console.log("🟠 [PROD] Redirecting to home after manual signup");
+        }
         navigate("/");
       } else {
         toast.error(data?.message || "Signup failed. Please try again.");
@@ -66,54 +68,54 @@ const Signup = () => {
   };
 
   const handleGoogleSignup = async () => {
-    console.log("🔵 Frontend: Starting Google signup process...");
+    if (import.meta.env.MODE === "production") {
+      console.log("🟠 [PROD] Starting Google signup process...");
+    }
     setGoogleLoading(true);
     setManualLoading(false);
 
     try {
-      console.log("🔵 Frontend: Calling Firebase signInWithPopup...");
+      if (import.meta.env.MODE === "production") {
+        console.log("🟠 [PROD] Calling Firebase signInWithPopup...");
+      }
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
       const tokenId = await user.getIdToken();
 
-      console.log("🔵 Frontend: Firebase user data:", {
-        email: user.email,
-        displayName: user.displayName,
-        photoURL: user.photoURL
-      });
+      if (import.meta.env.MODE === "production") {
+        console.log("🟠 [PROD] Firebase user data:", {
+          email: user.email,
+          displayName: user.displayName,
+          photoURL: user.photoURL
+        });
+      }
 
-      console.log("🔵 Frontend: Calling backend google-signup API...");
+      if (import.meta.env.MODE === "production") {
+        console.log("🟠 [PROD] Calling backend google-signup API...");
+      }
       const { data } = await axios.post(
         "/users/google-signup",
         { tokenId },
         { withCredentials: true }
       );
-
-      console.log("🔵 Frontend: Backend response:", data);
-
+      if (import.meta.env.MODE === "production") {
+        console.log("🟠 [PROD] Backend response:", data);
+        console.log("🟠 [PROD] Document.cookie after Google signup:", document.cookie);
+      }
       if (data?.success) {
-        console.log("✅ Frontend: Google signup successful!");
-        console.log("🔵 Frontend: User data from response:", data.user);
-        
-        // Set user data immediately if available
         if (data.user) {
-          console.log("🔵 Frontend: Setting user data immediately...");
           useAuthStore.getState().setUser(data.user);
         }
-        
-        console.log("🔵 Frontend: Calling fetchUser to refresh data...");
         await fetchUser();
-        
-        console.log("🔵 Frontend: Navigating to home page...");
+        if (import.meta.env.MODE === "production") {
+          console.log("🟠 [PROD] Redirecting to home after Google signup");
+        }
         toast.success(data.message || "Google signup successful!");
         navigate("/");
       } else {
-        console.log("❌ Frontend: Google signup failed in response");
         toast.error(data?.message || "Google signup failed.");
       }
     } catch (error) {
-      console.error("❌ Frontend: Google signup error:", error);
-      console.error("❌ Frontend: Error response:", error.response?.data);
       toast.error(
         error.response?.data?.message ||
           "Google signup failed. Please try again."

@@ -62,14 +62,20 @@ exports.login = async (req, res) => {
       { expiresIn: "15d" }
     );
 
-    res.cookie("auth", token, {
+    const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "none",
       path: "/",
       maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
       domain: process.env.NODE_ENV === "production" ? process.env.COOKIE_DOMAIN : undefined
-    });
+    };
+    if (process.env.NODE_ENV === "production") {
+      console.log("🍪 [PROD] Setting cookie (manual login):", cookieOptions);
+      console.log("🍪 [PROD] Token:", token);
+      console.log("🍪 [PROD] COOKIE_DOMAIN:", process.env.COOKIE_DOMAIN);
+    }
+    res.cookie("auth", token, cookieOptions);
 
     res.status(200).json({
       success: true,
@@ -160,14 +166,20 @@ exports.googleLogin = async (req, res) => {
       );
       console.log("✅ JWT token generated");
 
-      res.cookie("auth", token, {
+      const cookieOptions = {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "none",
         path: "/",
         maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
         domain: process.env.NODE_ENV === "production" ? process.env.COOKIE_DOMAIN : undefined
-      });
+      };
+      if (process.env.NODE_ENV === "production") {
+        console.log("🍪 [PROD] Setting cookie (Google login):", cookieOptions);
+        console.log("🍪 [PROD] Token:", token);
+        console.log("🍪 [PROD] COOKIE_DOMAIN:", process.env.COOKIE_DOMAIN);
+      }
+      res.cookie("auth", token, cookieOptions);
       console.log("✅ Auth cookie set");
 
       const finalProfileImage = userProfile?.profileImage || null;
