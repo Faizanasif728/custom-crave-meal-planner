@@ -91,16 +91,33 @@ exports.logout = (req, res) => {
 // ✅ Google Login Controller
 exports.googleLogin = async (req, res) => {
   try {
+    console.log("🔵 Starting Google Login process...");
     const { tokenId } = req.body;
+
+    console.log("🔵 Token ID received:", tokenId ? "Present" : "Missing");
 
     const decodedToken = await admin.auth().verifyIdToken(tokenId);
     const { email, name, picture } = decodedToken;
 
+    console.log("🔵 Google Token Decoded Successfully:");
+    console.log("  - Email:", email);
+    console.log("  - Name:", name);
+    console.log("  - Picture URL:", picture);
+    console.log("  - Picture URL Type:", typeof picture);
+    console.log("  - Picture URL Length:", picture ? picture.length : 0);
+
     let user = await User.findOne({ email });
+    console.log("🔵 User lookup result:", user ? "User found" : "No user found");
 
     if (user) {
+      console.log("🔵 User details:");
+      console.log("  - User ID:", user._id);
+      console.log("  - Username:", user.username);
+      console.log("  - Is Google User:", user.isGoogleUser);
+
       // If user exists and is a Google user, allow login
       if (!user.isGoogleUser) {
+        console.log("❌ User exists but is not a Google user");
         return res.status(400).json({
           success: false,
           message:
@@ -108,14 +125,40 @@ exports.googleLogin = async (req, res) => {
         });
       }
 
+      console.log("✅ User is a Google user, proceeding with login...");
+
       // Get user profile to check profile image
       const userProfile = await UserProfile.findOne({ userId: user._id });
+      console.log("🔵 User profile lookup result:", userProfile ? "Profile found" : "No profile found");
+      
+      if (userProfile) {
+        console.log("🔵 Current profile image in database:", userProfile.profileImage);
+      }
+
+      // Check if we should update the profile image with the latest Google picture
+      if (picture && userProfile && userProfile.profileImage !== picture) {
+        console.log("🔄 Updating profile image with latest Google picture...");
+        console.log("  - Old image:", userProfile.profileImage);
+        console.log("  - New image:", picture);
+        
+        userProfile.profileImage = picture;
+        await userProfile.save();
+        console.log("✅ Profile image updated successfully");
+      } else if (picture && !userProfile.profileImage) {
+        console.log("🔄 Setting profile image for the first time...");
+        userProfile.profileImage = picture;
+        await userProfile.save();
+        console.log("✅ Profile image set for the first time");
+      } else {
+        console.log("ℹ️ No profile image update needed");
+      }
 
       const token = jwt.sign(
         { _id: user._id, email: user.email },
         process.env.SECRET,
         { expiresIn: "15d" }
       );
+      console.log("✅ JWT token generated");
 
       res.cookie("auth", token, {
         httpOnly: true,
@@ -125,6 +168,10 @@ exports.googleLogin = async (req, res) => {
         maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
         domain: process.env.NODE_ENV === "production" ? process.env.COOKIE_DOMAIN : undefined
       });
+      console.log("✅ Auth cookie set");
+
+      const finalProfileImage = userProfile?.profileImage || null;
+      console.log("📤 Sending response with profile image:", finalProfileImage);
 
       return res.status(200).json({
         success: true,
@@ -132,18 +179,20 @@ exports.googleLogin = async (req, res) => {
         user: { 
           username: user.username, 
           email: user.email,
-          profileImage: userProfile?.profileImage || null // Use profile image if exists, otherwise null
+          profileImage: finalProfileImage // Use profile image if exists, otherwise null
         },
       });
     }
 
     // No user exists → Reject login attempt
+    console.log("❌ No user found with email:", email);
     return res.status(400).json({
       success: false,
       message: "No account found. Please sign up with Google first.",
     });
   } catch (error) {
-    console.error("Error during Google login:", error);
+    console.error("❌ Error during Google login:", error);
+    console.error("❌ Error stack:", error.stack);
     res.status(500).json({ success: false, message: "Google login failed" });
   }
 };

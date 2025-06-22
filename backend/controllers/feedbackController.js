@@ -5,15 +5,15 @@ const User = require("../models/users"); // Ensure this is the correct path to y
 
 exports.submitFeedback = async (req, res) => {
   try {
-    const { message } = req.body;
+    const { username, email, message } = req.body;
 
     if (!message) {
       return res.status(400).json({ message: "Feedback message is required" });
     }
 
-    // Get user details
-    const user = await User.findById(req.user.id);
-    const userProfile = await UserProfile.findOne({ userId: req.user.id });
+    // Get user profile to include profile image
+    const user = await User.findById(req.user._id);
+    const userProfile = await UserProfile.findOne({ userId: req.user._id });
 
     if (!user || !userProfile) {
       return res.status(404).json({ message: "User or profile not found" });

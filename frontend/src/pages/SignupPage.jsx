@@ -66,28 +66,54 @@ const Signup = () => {
   };
 
   const handleGoogleSignup = async () => {
+    console.log("🔵 Frontend: Starting Google signup process...");
     setGoogleLoading(true);
     setManualLoading(false);
 
     try {
+      console.log("🔵 Frontend: Calling Firebase signInWithPopup...");
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
       const tokenId = await user.getIdToken();
 
+      console.log("🔵 Frontend: Firebase user data:", {
+        email: user.email,
+        displayName: user.displayName,
+        photoURL: user.photoURL
+      });
+
+      console.log("🔵 Frontend: Calling backend google-signup API...");
       const { data } = await axios.post(
         "/users/google-signup",
         { tokenId },
         { withCredentials: true }
       );
 
+      console.log("🔵 Frontend: Backend response:", data);
+
       if (data?.success) {
-        toast.success(data.message || "Google signup successful!");
+        console.log("✅ Frontend: Google signup successful!");
+        console.log("🔵 Frontend: User data from response:", data.user);
+        
+        // Set user data immediately if available
+        if (data.user) {
+          console.log("🔵 Frontend: Setting user data immediately...");
+          useAuthStore.getState().setUser(data.user);
+        }
+        
+        console.log("🔵 Frontend: Calling fetchUser to refresh data...");
         await fetchUser();
+        
+        console.log("🔵 Frontend: Navigating to home page...");
+        toast.success(data.message || "Google signup successful!");
         navigate("/");
       } else {
+        console.log("❌ Frontend: Google signup failed in response");
         toast.error(data?.message || "Google signup failed.");
       }
     } catch (error) {
+      console.error("❌ Frontend: Google signup error:", error);
+      console.error("❌ Frontend: Error response:", error.response?.data);
       toast.error(
         error.response?.data?.message ||
           "Google signup failed. Please try again."

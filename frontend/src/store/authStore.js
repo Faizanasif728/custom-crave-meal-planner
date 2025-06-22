@@ -32,12 +32,19 @@ const useAuthStore = create((set) => ({
   isLoading: true,
   profileImage: null,
 
-  setUser: (user) => set({ 
-    user, 
-    isAuthenticated: true, 
-    isLoading: false,
-    profileImage: user?.profileImage || null 
-  }),
+  setUser: (user) => {
+    console.log("🔵 AuthStore: setUser called with:", user);
+    console.log("🔵 AuthStore: Profile image in user data:", user?.profileImage);
+    
+    set({ 
+      user, 
+      isAuthenticated: true, 
+      isLoading: false,
+      profileImage: user?.profileImage || null 
+    });
+    
+    console.log("✅ AuthStore: User state set successfully");
+  },
 
   setLoading: (loading) => set({ isLoading: loading }),
 
@@ -47,24 +54,34 @@ const useAuthStore = create((set) => ({
   })),
 
   fetchUser: async () => {
+    console.log("🔵 AuthStore: fetchUser called");
     try {
       const { data } = await axios.get("/auth/get-profile", {
         withCredentials: true,
       });
+      console.log("🔵 AuthStore: API response:", data);
+      
       if (data?.user) {
+        console.log("🔵 AuthStore: User data received:", data.user);
+        console.log("🔵 AuthStore: Profile image from API:", data.user.profileImage);
+        
         set({ 
           user: data.user, 
           isAuthenticated: true, 
           isLoading: false,
           profileImage: data.user.profileImage || null 
         });
+        
+        console.log("✅ AuthStore: User state updated successfully");
         return true;
       } else {
+        console.log("❌ AuthStore: No user data in response");
         set({ user: null, isAuthenticated: false, isLoading: false, profileImage: null });
         return false;
       }
     } catch (error) {
-      console.error("Error fetching user:", error);
+      console.error("❌ AuthStore: Error fetching user:", error);
+      console.error("❌ AuthStore: Error response:", error.response?.data);
       // Always set isLoading to false, regardless of error type
       set({ user: null, isAuthenticated: false, isLoading: false, profileImage: null });
       return false;

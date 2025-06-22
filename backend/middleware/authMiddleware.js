@@ -4,26 +4,34 @@ const User = require("../models/users");
 // Middleware to authenticate the user
 const authenticateUser = async (req, res, next) => {
   try {
+    console.log("🔵 AuthMiddleware: Starting authentication...");
     const token = req.cookies.auth;
     if (!token) {
+      console.log("❌ AuthMiddleware: No auth token found");
       return res.status(401).json({
         message: "NOT_AUTHENTICATED",
       });
     }
 
+    console.log("🔵 AuthMiddleware: Token found, verifying...");
     const decoded = jwt.verify(token, process.env.SECRET);
+    console.log("🔵 AuthMiddleware: Token decoded, user ID:", decoded._id);
+    
     const user = await User.findById(decoded._id);
+    console.log("🔵 AuthMiddleware: User lookup result:", user ? "User found" : "User not found");
 
     if (!user) {
+      console.log("❌ AuthMiddleware: User not found in database");
       return res.status(401).json({
         message: "NOT_AUTHENTICATED",
       });
     }
 
+    console.log("✅ AuthMiddleware: User authenticated successfully");
     req.user = user;
     next();
   } catch (err) {
-    console.error("Auth Middleware Error:", err);
+    console.error("❌ AuthMiddleware Error:", err);
     res.status(401).json({
       message: "NOT_AUTHENTICATED",
     });

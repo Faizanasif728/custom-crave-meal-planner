@@ -8,11 +8,11 @@ const generateMealPlan = async (req, res) => {
   console.log("Received request to generate meal plan");
 
   try {
-    if (!req.user || !req.user.id) {
+    if (!req.user || !req.user._id) {
       return res.status(401).json({ message: "Unauthorized: User not found" });
     }
 
-    const userId = req.user.id;
+    const userId = req.user._id;
     console.log("Extracted userId from token:", userId);
 
     // Fetch user profile to get daily calories and weight goal
@@ -230,7 +230,7 @@ const generateMealPlan = async (req, res) => {
 
 const getAllMealPlans = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user._id;
 
     // Fetch meal plans for logged-in user
     const mealPlans = await MealPlan.find({ userId })
@@ -263,7 +263,7 @@ const getAllMealPlans = async (req, res) => {
 
 const deleteMealPlan = async (req, res) => {
   try {
-    const userId = req.user.id; // Get the authenticated user's ID
+    const userId = req.user._id; // Get the authenticated user's ID
     const { mealPlanId } = req.params; // Get the meal plan ID from the request parameters
 
     // Check if the meal plan exists and belongs to the user
@@ -294,11 +294,11 @@ const deleteMealPlan = async (req, res) => {
 
 const regenerateMealPlan = async (req, res) => {
   try {
-    if (!req.user || !req.user.id) {
+    if (!req.user || !req.user._id) {
       return res.status(401).json({ message: "Unauthorized: User not found" });
     }
 
-    const userId = req.user.id;
+    const userId = req.user._id;
 
     // Fetch the user's last saved meal plan
     const lastMealPlan = await MealPlan.findOne({ userId }).sort({

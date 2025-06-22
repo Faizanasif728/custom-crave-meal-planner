@@ -96,7 +96,7 @@ exports.getUserCalories = async (req, res) => {
         .json({ message: "Unauthorized. User not authenticated." });
     }
 
-    let userProfile = await UserProfile.findOne({ userId: req.user.id });
+    let userProfile = await UserProfile.findOne({ userId: req.user._id });
     if (!userProfile) {
       return res.status(404).json({ message: "User profile not found" });
     }
@@ -162,12 +162,21 @@ exports.getUserCalories = async (req, res) => {
 // 🔹 Get User Profile (Requires Authentication)
 exports.getUserProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select("-password");
-    const userProfile = await UserProfile.findOne({ userId: req.user.id });
+    console.log("🔵 Getting user profile for user ID:", req.user._id);
+    
+    const user = await User.findById(req.user._id).select("-password");
+    const userProfile = await UserProfile.findOne({ userId: req.user._id });
+
+    console.log("🔵 User lookup result:", user ? "User found" : "User not found");
+    console.log("🔵 User profile lookup result:", userProfile ? "Profile found" : "Profile not found");
 
     if (!user || !userProfile) {
+      console.log("❌ User or profile not found");
       return res.status(404).json({ message: "User not found" });
     }
+
+    console.log("🔵 Profile image from database:", userProfile.profileImage);
+    console.log("📤 Sending user profile response...");
 
     res.status(200).json({
       user: {
@@ -177,7 +186,8 @@ exports.getUserProfile = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error fetching user profile:", error);
+    console.error("❌ Error fetching user profile:", error);
+    console.error("❌ Error stack:", error.stack);
     res.status(500).json({ message: "Error fetching user profile" });
   }
 };
@@ -186,7 +196,7 @@ exports.getUserProfile = async (req, res) => {
 exports.updateUserProfile = async (req, res) => {
   try {
     const { newUsername, newEmail, oldPassword, newPassword } = req.body;
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user._id);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -263,14 +273,14 @@ exports.updateUserProfile = async (req, res) => {
 // 🔹 Delete User (Authenticated)
 exports.deleteUser = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user._id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
     // Delete the associated user profile
     const userProfile = await UserProfile.findOneAndDelete({
-      userId: req.user.id,
+      userId: req.user._id,
     });
     if (!userProfile) {
       console.warn(
@@ -279,7 +289,7 @@ exports.deleteUser = async (req, res) => {
     }
 
     // Delete the user
-    await User.deleteOne({ _id: req.user.id });
+    await User.deleteOne({ _id: req.user._id });
 
     // Clear the authentication cookie
     res.clearCookie("auth");
@@ -295,7 +305,7 @@ exports.deleteUser = async (req, res) => {
 // 🔹 Upload Profile Image
 exports.uploadProfileImage = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user._id;
 
     // Check if a file is uploaded
     if (!req.file) {
@@ -354,7 +364,7 @@ exports.uploadProfileImage = async (req, res) => {
 
 exports.deleteProfileImage = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user._id;
     console.log("User ID:", userId);
 
     // Find the user profile
@@ -408,7 +418,7 @@ exports.deleteProfileImage = async (req, res) => {
 exports.getUserCustomMeals = async (req, res) => {
   try {
     const userProfile = await UserProfile.findOne(
-      { userId: req.user.id },
+      { userId: req.user._id },
       { customMeals: 1 } // Fetch only the customMeals field
     );
 
@@ -541,23 +551,34 @@ exports.getMealType = async (req, res) => {
 // ✅ Google Signup Controller
 exports.googleSignup = async (req, res) => {
   try {
+    console.log("🔵 Starting Google Signup process...");
     const { tokenId } = req.body;
+
+    console.log("🔵 Token ID received:", tokenId ? "Present" : "Missing");
 
     const decodedToken = await admin.auth().verifyIdToken(tokenId);
     const { email, name, picture } = decodedToken;
 
-    // 👇 Yeh line add karein
-    console.log("Google Login Picture URL:", picture);
+    console.log("🔵 Google Token Decoded Successfully:");
+    console.log("  - Email:", email);
+    console.log("  - Name:", name);
+    console.log("  - Picture URL:", picture);
+    console.log("  - Picture URL Type:", typeof picture);
+    console.log("  - Picture URL Length:", picture ? picture.length : 0);
 
     let user = await User.findOne({ email });
+    console.log("🔵 Existing user check:", user ? "User found" : "No existing user");
 
     if (user) {
+      console.log("❌ User already exists with email:", email);
       // ➡️ If user already exists, return an error
       return res.status(400).json({
         success: false,
         message: "This email is already registered. Please login instead.",
       });
     }
+
+    console.log("✅ Proceeding with new user creation...");
 
     // ➡️ Create new user
     const randomPassword = Math.random().toString(36).slice(-8);
@@ -571,8 +592,12 @@ exports.googleSignup = async (req, res) => {
       isEmailVerified: true,
     });
     await newUser.save();
+    console.log("✅ New user created with ID:", newUser._id);
 
     // ➡️ Create user profile with Google picture if available
+    const profileImageUrl = picture || "https://via.placeholder.com/150";
+    console.log("🔵 Setting profile image URL:", profileImageUrl);
+
     const userProfile = new UserProfile({
       userId: newUser._id,
       age: null,
@@ -581,13 +606,15 @@ exports.googleSignup = async (req, res) => {
       weight: null,
       activityLevel: "not_specified",
       weightGoal: "not_specified",
-      profileImage: picture || null, // Use Google picture if available
+      profileImage: profileImageUrl, // Use Google picture if available, otherwise default
     });
     await userProfile.save();
+    console.log("✅ User profile created with profile image:", userProfile.profileImage);
 
     const token = jwt.sign({ _id: newUser._id }, process.env.SECRET, {
       expiresIn: "15d",
     });
+    console.log("✅ JWT token generated");
 
     res.cookie("auth", token, {
       httpOnly: true,
@@ -595,6 +622,10 @@ exports.googleSignup = async (req, res) => {
       sameSite: "Strict",
       maxAge: 15 * 24 * 60 * 60 * 1000,
     });
+    console.log("✅ Auth cookie set");
+
+    console.log("🎉 Google Signup completed successfully!");
+    console.log("📤 Sending response with user data...");
 
     res.status(201).json({
       success: true,
@@ -602,11 +633,12 @@ exports.googleSignup = async (req, res) => {
       user: {
         username: newUser.username,
         email: newUser.email,
-        profileImage: picture || null, // Send Google picture if available
+        profileImage: profileImageUrl, // Send the actual profile image URL
       },
     });
   } catch (error) {
-    console.error("Error during Google signup:", error);
+    console.error("❌ Error during Google signup:", error);
+    console.error("❌ Error stack:", error.stack);
     res.status(500).json({ success: false, message: "Google signup failed" });
   }
 };

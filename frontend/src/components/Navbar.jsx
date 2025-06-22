@@ -45,6 +45,13 @@ const Navbar = ({
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Debug logging for profile image
+  useEffect(() => {
+    console.log("🔵 Navbar: User data:", user);
+    console.log("🔵 Navbar: Profile image state:", profileImage);
+    console.log("🔵 Navbar: User profile image:", user?.profileImage);
+  }, [user, profileImage]);
+
   // Determine if we're on specific pages
   const isHomePage = location.pathname === "/";
   const isTransparentNavPage = ["/meal-planner", "/custom-category"].includes(
