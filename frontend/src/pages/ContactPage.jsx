@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import axios from "../api";
+import api from "../api";
 import { toast } from "react-toastify";
 import { FaGithub, FaLinkedin, FaTwitter, FaEnvelope } from "react-icons/fa";
 
@@ -53,7 +53,7 @@ const Contact = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post("/feedback/submit", {
+      const response = await api.post("/feedback/submit", {
         username: formData.username,
         email: formData.email,
         message: formData.feedback,

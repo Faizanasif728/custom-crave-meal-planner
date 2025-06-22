@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "../api";
+import api from "../api";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaChevronDown, FaChevronUp, FaTrash, FaInfoCircle, FaClock } from "react-icons/fa";
 import Modal from "../components/Modal";
@@ -48,7 +48,7 @@ const CustomRecipesPage = () => {
   useEffect(() => {
     const fetchCustomMeals = async () => {
       try {
-        const { data } = await axios.get("/users/get-custom-meals", {
+        const { data } = await api.get("/users/get-custom-meals", {
           withCredentials: true,
         });
         // Sort meals by creation date (newest first)
@@ -72,7 +72,7 @@ const CustomRecipesPage = () => {
         ? `/custom/ingredient-restriction/${selectedMealId}`
         : `/custom/calorie-nutrient/${selectedMealId}`;
       
-      await axios.delete(endpoint, {
+      await api.delete(endpoint, {
         withCredentials: true,
       });
       

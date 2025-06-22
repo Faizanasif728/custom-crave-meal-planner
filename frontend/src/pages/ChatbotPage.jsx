@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "../api";
+import api from "../api";
 import { marked } from "marked";
 import { motion } from "framer-motion";
 import { useNavigate, Link, useLocation } from "react-router-dom";
@@ -94,7 +94,7 @@ const ChatbotPage = () => {
       if (conversationId) {
         try {
           setLoading(true);
-          const response = await axios.get(`/groq/conversation/${conversationId}`);
+          const response = await api.get(`/groq/conversation/${conversationId}`);
           if (response.data.success) {
             const conversation = response.data.conversation;
             setMessages(conversation.messages);
@@ -166,7 +166,7 @@ const ChatbotPage = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post("/groq/chat", {
+      const res = await api.post("/groq/chat", {
         message: input,
         conversationId, // can be null for new conversation
       });

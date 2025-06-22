@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import axios from "../api";
+import api from "../api";
 import { motion } from "framer-motion";
 import { FaCalendarAlt, FaArrowRight, FaInfoCircle } from "react-icons/fa";
 import { useProgress } from "../context/ProgressContext";
@@ -27,7 +27,7 @@ const NumberOfDaysPage = () => {
   const handleNext = async () => {
     if (noOfDays && Number(noOfDays) > 0) {
       try {
-        const response = await axios.post("/mealplan/generate", {
+        const response = await api.post("/mealplan/generate", {
           weightGoal,
           dietaryType,
           mealType,

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import axios from "../api";
+import api from "../api";
 import { toast } from "react-toastify";
 import Slider from "react-slick";
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
@@ -80,7 +80,7 @@ const Home = () => {
   useEffect(() => {
     const fetchFeedbacks = async () => {
       try {
-        const res = await axios.get("/feedback/all");
+        const res = await api.get("/feedback/all");
         setUserFeedbacks(
           Array.isArray(res.data.feedbacks)
             ? res.data.feedbacks.sort(
@@ -136,7 +136,7 @@ const Home = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post("/feedback/submit", {
+      const response = await api.post("/feedback/submit", {
         username: formData.username,
         email: formData.email,
         message: formData.feedback,

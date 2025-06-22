@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import axios from "../api";
+import api from "../api";
 import { toast } from "react-toastify";
 import useAuthStore from "../store/authStore";
 import { auth, provider, signInWithPopup } from "../config/firebaseConfig";
@@ -28,7 +28,7 @@ const Login = () => {
     setGoogleLoading(false);
 
     try {
-      const { data } = await axios.post(
+      const { data } = await api.post(
         "/auth/login",
         {
           ...formData,
@@ -89,7 +89,7 @@ const Login = () => {
       if (import.meta.env.MODE === "production") {
         console.log("🟠 [PROD] Calling backend google-login API...");
       }
-      const { data } = await axios.post(
+      const { data } = await api.post(
         "/auth/google-login",
         { tokenId, rememberMe },
         { withCredentials: true }

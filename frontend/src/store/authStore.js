@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import axios from "../api";
+import api from "../api";
 import { toast } from "react-toastify";
 import { signOut } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
@@ -7,7 +7,7 @@ import { auth } from "../config/firebaseConfig";
 // Add axios interceptor for session expiration
 let isSessionExpired = false;
 
-axios.interceptors.response.use(
+api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (
@@ -60,7 +60,7 @@ const useAuthStore = create((set) => ({
       console.log("🟠 [PROD] fetchUser called");
     }
     try {
-      const { data } = await axios.get("/auth/get-profile", {
+      const { data } = await api.get("/auth/get-profile", {
         withCredentials: true,
       });
       if (import.meta.env.MODE === "production") {
@@ -101,7 +101,7 @@ const useAuthStore = create((set) => ({
   logout: async () => {
     try {
       // Call backend logout API
-      await axios.post("/auth/logout", {}, { withCredentials: true });
+      await api.post("/auth/logout", {}, { withCredentials: true });
 
       // Sign out from Firebase (if applicable)
       await signOut(auth);
@@ -119,7 +119,7 @@ const useAuthStore = create((set) => ({
       const formData = new FormData();
       formData.append("image", file);
 
-      const { data } = await axios.post(
+      const { data } = await api.post(
         "/users/upload-profile-image",
         formData,
         {
@@ -148,7 +148,7 @@ const useAuthStore = create((set) => ({
 
   deleteProfileImage: async () => {
     try {
-      await axios.delete("/users/delete-profile-image", {
+      await api.delete("/users/delete-profile-image", {
         withCredentials: true,
       });
 
@@ -168,7 +168,7 @@ const useAuthStore = create((set) => ({
   deleteUser: async () => {
     try {
       // Call backend API to delete user
-      await axios.delete("/users/delete-user", { withCredentials: true });
+      await api.delete("/users/delete-user", { withCredentials: true });
 
       // Sign out from Firebase (if applicable)
       await signOut(auth);

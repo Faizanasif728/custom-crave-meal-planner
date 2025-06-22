@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaChevronDown, FaChevronUp, FaSyncAlt, FaUtensils, FaInfoCircle } from "react-icons/fa";
-import axios from "../api";
+import api from "../api";
 
 const AccordionSection = ({ title, children, isOpen, toggle }) => (
   <div className="mb-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
@@ -55,7 +55,7 @@ const MealPlanResultPage = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.post("/mealplan/regenerate");
+      const response = await api.post("/mealplan/regenerate");
       console.log("Regenerated Meal Plan Response:", response.data);
 
       if (response.data?.success && response.data?.mealPlan) {

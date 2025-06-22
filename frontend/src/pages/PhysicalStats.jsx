@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "../api";
+import api from "../api";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import {
@@ -22,8 +22,8 @@ const PhysicalStats = () => {
     const fetchUserData = async () => {
       try {
         const [statsResponse, profileResponse] = await Promise.all([
-          axios.get("/users/physical-stats"),
-          axios.get("/users/get-profile"),
+          api.get("/users/physical-stats"),
+          api.get("/users/get-profile"),
         ]);
 
         if (!statsResponse.data.success) {

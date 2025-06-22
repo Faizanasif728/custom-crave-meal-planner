@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "../api";
+import api from "../api";
 import { toast } from "react-toastify";
 import {
   FaCheck,
@@ -60,7 +60,7 @@ const MealsSchedulePage = () => {
   const fetchUserMealTypes = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get("/users/meal-type");
+      const { data } = await api.get("/users/meal-type");
       setSelectedMealTypes(data.mealType);
     } catch (error) {
       console.error("Error fetching meal types:", error);
@@ -82,7 +82,7 @@ const MealsSchedulePage = () => {
 
       setSelectedMealTypes(newSelectedMealTypes);
 
-      const { data } = await axios.put("/users/update-meal-type", {
+      const { data } = await api.put("/users/update-meal-type", {
         mealType: newSelectedMealTypes,
       });
 

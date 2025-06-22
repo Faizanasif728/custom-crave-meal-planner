@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import axios from "../api";
+import api from "../api";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/authStore";
 import { motion } from "framer-motion";
@@ -122,7 +122,7 @@ const UpdateProfilePage = () => {
 
     setLoading(true);
     try {
-      const { data } = await axios.put("/users/update-profile", formData, {
+      const { data } = await api.put("/users/update-profile", formData, {
         withCredentials: true,
       });
       if (data?.message) {
@@ -149,7 +149,7 @@ const UpdateProfilePage = () => {
 
   const handleDeleteProfile = async () => {
     try {
-      await axios.delete("/users/delete-user", { withCredentials: true });
+      await api.delete("/users/delete-user", { withCredentials: true });
       await signOut(auth);
       setUser(null);
       setProfileImage(null);

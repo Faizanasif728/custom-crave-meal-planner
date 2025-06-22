@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "../api";
+import api from "../api";
 import { motion } from "framer-motion";
 import { useProgress } from "../context/ProgressContext";
 import { toast, ToastContainer } from "react-toastify";
@@ -169,7 +169,7 @@ const CaloriesApplicationPage = () => {
       const payload = { ...formData, weightGoal: formData.goal };
       delete payload.goal;
 
-      const { data } = await axios.put("/users/calories", payload);
+      const { data } = await api.put("/users/calories", payload);
       const { dailyCalories } = data;
 
       navigate("/calories-result", { state: { dailyCalories } });

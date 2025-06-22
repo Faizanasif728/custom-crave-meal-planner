@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "../../api";
+import api from "../../api";
 import Slider from "react-slick";
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
 
@@ -28,7 +28,7 @@ const ReviewsPage = () => {
   useEffect(() => {
     const fetchFeedbacks = async () => {
       try {
-        const response = await axios.get("/feedback/all");
+        const response = await api.get("/feedback/all");
         setFeedbacks(response.data.feedbacks);
       } catch (error) {
         console.error("Error fetching feedbacks:", error);

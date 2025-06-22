@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "../api";
+import api from "../api";
 import { toast } from "react-toastify";
 import {
   FaCheck,
@@ -86,7 +86,7 @@ const DietNutritionPage = () => {
   const fetchUserDietaryType = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get("/users/dietary-type");
+      const { data } = await api.get("/users/dietary-type");
       setSelectedDietaryType(data.dietaryType);
     } catch (error) {
       console.error("Error fetching dietary type:", error);
@@ -103,7 +103,7 @@ const DietNutritionPage = () => {
   const handleDietaryTypeChange = async (newDietaryType) => {
     try {
       setSelectedDietaryType(newDietaryType);
-      const { data } = await axios.put("/users/update-dietary-type", {
+      const { data } = await api.put("/users/update-dietary-type", {
         dietaryType: newDietaryType,
       });
       if (data.success) {

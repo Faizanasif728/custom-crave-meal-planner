@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "../api";
+import api from "../api";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { marked } from "marked";
@@ -68,7 +68,7 @@ const ChatbotHistoryPage = () => {
   const fetchHistory = async (page = 1) => {
     try {
       setLoading(true);
-      const response = await axios.get(`/groq/history?page=${page}`);
+      const response = await api.get(`/groq/history?page=${page}`);
       if (response.data.success) {
         setConversations(response.data.conversations || []);
         setCurrentPage(response.data.currentPage);
@@ -170,7 +170,7 @@ const ChatbotHistoryPage = () => {
   const confirmDelete = async () => {
     try {
       setDeletingId(selectedConversationId);
-      const response = await axios.delete(`/groq/history/${selectedConversationId}`);
+      const response = await api.delete(`/groq/history/${selectedConversationId}`);
       if (response.data.success) {
         toast.success(response.data.message || "Conversation deleted successfully");
         // Remove the deleted conversation from the state

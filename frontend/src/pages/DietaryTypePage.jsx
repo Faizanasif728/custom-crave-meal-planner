@@ -12,7 +12,7 @@ import {
 } from "react-icons/md";
 import { FaArrowRight } from "react-icons/fa";
 import { useProgress } from "../context/ProgressContext";
-import axios from "../api";
+import api from "../api";
 
 const dietaryOptions = [
   {
@@ -83,7 +83,7 @@ const DietaryTypePage = () => {
     // Fetch weight goal from user profile
     const fetchWeightGoal = async () => {
       try {
-        const { data } = await axios.get("/auth/get-profile");
+        const { data } = await api.get("/auth/get-profile");
         setWeightGoal(data.profile?.weightGoal || "Not Set");
       } catch (error) {
         console.error("Error fetching weight goal:", error);
@@ -95,7 +95,7 @@ const DietaryTypePage = () => {
 
   const handleNext = () => {
     if (selectedDiet) {
-      axios
+      api
         .put("/users/update-dietary-type", { dietaryType: selectedDiet })
         .catch((error) => console.error("Error saving dietary type:", error));
 
