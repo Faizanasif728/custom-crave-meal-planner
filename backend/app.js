@@ -81,6 +81,35 @@ app.get("/", (req, res) => {
   res.send("Custom Crave Backend is running!");
 });
 
+// Debug endpoint to print environment variables (for production debugging)
+app.get("/api/debug-env", (req, res) => {
+  res.json({
+    NODE_ENV: process.env.NODE_ENV,
+    COOKIE_DOMAIN: process.env.COOKIE_DOMAIN,
+    FRONTEND_URL: process.env.FRONTEND_URL,
+    PRODUCTION_FRONTEND_URL: process.env.PRODUCTION_FRONTEND_URL,
+    MONGODB_URI: !!process.env.MONGODB_URI,
+    SECRET: !!process.env.SECRET,
+    CLOUDINARY_CLOUD_NAME: !!process.env.CLOUDINARY_CLOUD_NAME,
+    CLOUDINARY_API_KEY: !!process.env.CLOUDINARY_API_KEY,
+    CLOUDINARY_API_SECRET: !!process.env.CLOUDINARY_API_SECRET,
+    GROQ_API_KEY: !!process.env.GROQ_API_KEY,
+    PORT: process.env.PORT,
+    GOOGLE_CLIENT_ID: !!process.env.GOOGLE_CLIENT_ID,
+    FIREBASE_TYPE: process.env.FIREBASE_TYPE,
+    FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
+    FIREBASE_PRIVATE_KEY_ID: !!process.env.FIREBASE_PRIVATE_KEY_ID,
+    FIREBASE_PRIVATE_KEY: !!process.env.FIREBASE_PRIVATE_KEY,
+    FIREBASE_CLIENT_EMAIL: !!process.env.FIREBASE_CLIENT_EMAIL,
+    FIREBASE_CLIENT_ID: !!process.env.FIREBASE_CLIENT_ID,
+    FIREBASE_AUTH_URI: !!process.env.FIREBASE_AUTH_URI,
+    FIREBASE_TOKEN_URI: !!process.env.FIREBASE_TOKEN_URI,
+    FIREBASE_AUTH_PROVIDER_X509_CERT_URL: !!process.env.FIREBASE_AUTH_PROVIDER_X509_CERT_URL,
+    FIREBASE_CLIENT_X509_CERT_URL: !!process.env.FIREBASE_CLIENT_X509_CERT_URL,
+    FIREBASE_UNIVERSE_DOMAIN: !!process.env.FIREBASE_UNIVERSE_DOMAIN,
+  });
+});
+
 // Test route to check environment and server status
 app.get("/api/test-server", (req, res) => {
   res.json({
