@@ -54,8 +54,6 @@ const corsOptions = {
   optionsSuccessStatus: 200,
   preflightContinue: false,
   maxAge: 86400,
-  sameSite: "none",
-  secure: true
 };
 
 app.use(cors(corsOptions));
