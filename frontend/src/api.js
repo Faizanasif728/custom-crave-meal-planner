@@ -2,7 +2,7 @@ import axios from "axios";
 
 const baseURL =
   import.meta.env.MODE === "production"
-    ? "https://custom-crave-meal-planner-backend.vercel.app/api"
+    ? import.meta.env.VITE_API_URL_PRODUCTION
     : import.meta.env.VITE_API_URL_LOCAL;
 
 if (import.meta.env.MODE === "production") {
