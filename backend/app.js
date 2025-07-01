@@ -46,6 +46,17 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+// Cookie debugging middleware (for production troubleshooting)
+app.use((req, res, next) => {
+  if (process.env.NODE_ENV === "production") {
+    console.log(`🔍 [${req.method}] ${req.path}`);
+    console.log("🔍 Headers:", JSON.stringify(req.headers, null, 2));
+    console.log("🔍 Cookies:", req.cookies);
+  }
+  next();
+});
+
+
 // Middleware
 app.use(logger("dev"));
 app.use(express.json());
