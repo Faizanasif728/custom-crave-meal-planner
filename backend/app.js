@@ -31,8 +31,8 @@ process.on("unhandledRejection", (reason, promise) => {
   console.error("Unhandled Promise Rejection:", reason);
 });
 const allowedOrigins = [
-  "http://localhost:5173",
-  "https://custom-crave-meal-planner-1.onrender.com",
+  "http://localhost:5173", //local dev
+  "https://custom-crave-meal-planner-1.onrender.com", //production
 ];
 
 const corsOptions = {
