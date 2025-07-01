@@ -66,8 +66,9 @@ app.use((req, res, next) => {
 // Middleware
 app.use(logger("dev"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: false }));
+
 
 // Use Routes
 app.use("/api/users", userRoutes);
