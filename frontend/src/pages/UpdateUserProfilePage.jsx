@@ -122,7 +122,7 @@ const UpdateProfilePage = () => {
 
     setLoading(true);
     try {
-      const { data } = await api.put("/users/update-profile", formData);
+      const { data } = await api.put("/users/update-profile", formData, { withCredentials: true });
       if (data?.message) {
         toast.success(data.message);
         // Update local user state if username or email was changed

@@ -61,9 +61,29 @@ exports.login = async (req, res) => {
       { expiresIn: "15d" }
     );
 
+    // Restore cookie-based auth for manual login
+    const isProd = process.env.NODE_ENV === "production";
+    const cookieOptions = {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? "None" : "Lax",
+      path: "/",
+      maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
+      ...(isProd && process.env.COOKIE_DOMAIN ? { domain: process.env.COOKIE_DOMAIN } : {})
+    };
+    if (isProd) {
+      console.log("🍪 [PROD] Setting cookie (manual login):", cookieOptions);
+      console.log("🍪 [PROD] Token:", token);
+      console.log("🍪 [PROD] COOKIE_DOMAIN:", process.env.COOKIE_DOMAIN);
+    }
+    res.cookie("auth", token, cookieOptions);
+    if (isProd) {
+      console.log("🍪 [PROD] res.cookie called for auth. Checking res.getHeaders()...");
+      console.log("🍪 [PROD] Response headers after setting cookie:", res.getHeaders());
+    }
     res.status(200).json({
       success: true,
-      token,
+      message: "Login successful",
       user: { username: user.username, email: user.email },
     });
   } catch (error) {
@@ -159,16 +179,21 @@ exports.googleLogin = async (req, res) => {
       );
       console.log("✅ JWT token generated");
 
+      // Restore cookie-based auth for Google login
+      res.cookie("auth", token, cookieOptions);
+      if (isProd) {
+        console.log("🍪 [PROD] res.cookie called for auth. Checking res.getHeaders()...");
+        console.log("🍪 [PROD] Response headers after setting cookie:", res.getHeaders());
+      }
+      console.log("✅ Auth cookie set");
       const finalProfileImage = userProfile?.profileImage || null;
-      console.log("📤 Sending response with profile image:", finalProfileImage);
-
       return res.status(200).json({
         success: true,
-        token,
+        message: "Google login successful",
         user: { 
           username: user.username, 
           email: user.email,
-          profileImage: finalProfileImage // Use profile image if exists, otherwise null
+          profileImage: finalProfileImage
         },
       });
     }

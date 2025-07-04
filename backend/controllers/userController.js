@@ -644,7 +644,6 @@ exports.googleSignup = async (req, res) => {
       sameSite: isProd ? "None" : "Lax",
       path: "/",
       maxAge: 15 * 24 * 60 * 60 * 1000,
-      // Don't set domain for cross-origin cookies - let browser handle it
       ...(isProd && process.env.COOKIE_DOMAIN ? { domain: process.env.COOKIE_DOMAIN } : {})
     };
     if (isProd) {
@@ -652,9 +651,14 @@ exports.googleSignup = async (req, res) => {
       console.log("🍪 [PROD] Token:", token);
       console.log("🍪 [PROD] COOKIE_DOMAIN:", process.env.COOKIE_DOMAIN);
     }
+    res.cookie("auth", token, cookieOptions);
+    if (isProd) {
+      console.log("🍪 [PROD] res.cookie called for auth. Checking res.getHeaders()...");
+      console.log("🍪 [PROD] Response headers after setting cookie:", res.getHeaders());
+    }
+    console.log("✅ Auth cookie set");
     res.status(201).json({
       success: true,
-      token,
       message: "Signup with Google successful",
       user: {
         username: newUser.username,

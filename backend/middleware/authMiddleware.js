@@ -9,8 +9,7 @@ const authenticateUser = async (req, res, next) => {
       console.log("🔍 [PROD] req.cookies:", req.cookies);
     }
     console.log("🔵 AuthMiddleware: Starting authentication...");
-    const authHeader = req.headers.authorization;
-    const token = authHeader && authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : null;
+    const token = req.cookies.auth;
     if (!token) {
       console.log("❌ AuthMiddleware: No auth token found");
       return res.status(401).json({

@@ -184,4 +184,34 @@ const useAuthStore = create((set) => ({
   clearAuth: () => set({ user: null, isAuthenticated: false, profileImage: null }),
 }));
 
-export default useAuthStore;
+const login = async (credentials) => {
+  try {
+    const { data } = await api.post('/auth/login', credentials);
+    useAuthStore.getState().setUser(data.user);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const signup = async (formData) => {
+  try {
+    const { data } = await api.post('/users/create-user', formData);
+    useAuthStore.getState().setUser(data.user);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const googleSignup = async (tokenId) => {
+  try {
+    const { data } = await api.post('/users/google-signup', { tokenId });
+    useAuthStore.getState().setUser(data.user);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export { login, signup, googleSignup, useAuthStore as default };
