@@ -48,9 +48,7 @@ const CustomRecipesPage = () => {
   useEffect(() => {
     const fetchCustomMeals = async () => {
       try {
-        const { data } = await api.get("/users/get-custom-meals", {
-          withCredentials: true,
-        });
+        const { data } = await api.get("/users/get-custom-meals");
         // Sort meals by creation date (newest first)
         const sortedMeals = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         setCustomMeals(sortedMeals);
@@ -72,9 +70,7 @@ const CustomRecipesPage = () => {
         ? `/custom/ingredient-restriction/${selectedMealId}`
         : `/custom/calorie-nutrient/${selectedMealId}`;
       
-      await api.delete(endpoint, {
-        withCredentials: true,
-      });
+      await api.delete(endpoint);
       
       setCustomMeals((prev) => prev.filter((meal) => meal._id !== selectedMealId));
       toast.success("Custom meal deleted successfully!");

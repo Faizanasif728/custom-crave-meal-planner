@@ -36,9 +36,7 @@ const Signup = () => {
     setGoogleLoading(false);
 
     try {
-      const { data } = await api.post("/users/create-user", formData, {
-        withCredentials: true,
-      });
+      const { data } = await api.post("/users/create-user", formData);
       if (import.meta.env.MODE === "production") {
         console.log("🟠 [PROD] Manual signup response:", data);
         console.log("🟠 [PROD] Document.cookie after signup:", document.cookie);
@@ -95,11 +93,7 @@ const Signup = () => {
       if (import.meta.env.MODE === "production") {
         console.log("🟠 [PROD] Calling backend google-signup API...");
       }
-      const { data } = await api.post(
-        "/users/google-signup",
-        { tokenId },
-        { withCredentials: true }
-      );
+      const { data } = await api.post("/users/google-signup", { tokenId });
       if (import.meta.env.MODE === "production") {
         console.log("🟠 [PROD] Backend response:", data);
         console.log("🟠 [PROD] Document.cookie after Google signup:", document.cookie);

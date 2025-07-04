@@ -11,11 +11,19 @@ if (import.meta.env.MODE === "production") {
 
 const api = axios.create({
   baseURL,
-  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
   },
+});
+
+// Add interceptor to attach JWT token
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 // Add a function to regenerate the meal plan

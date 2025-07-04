@@ -61,30 +61,9 @@ exports.login = async (req, res) => {
       { expiresIn: "15d" }
     );
 
-    const isProd = process.env.NODE_ENV === "production";
-    const cookieOptions = {
-      httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? "None" : "Lax",
-      path: "/",
-      maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
-      // Don't set domain for cross-origin cookies - let browser handle it
-      ...(isProd && process.env.COOKIE_DOMAIN ? { domain: process.env.COOKIE_DOMAIN } : {})
-    };
-    if (isProd) {
-      console.log("🍪 [PROD] Setting cookie (manual login):", cookieOptions);
-      console.log("🍪 [PROD] Token:", token);
-      console.log("🍪 [PROD] COOKIE_DOMAIN:", process.env.COOKIE_DOMAIN);
-    }
-    res.cookie("auth", token, cookieOptions);
-    if (isProd) {
-      console.log("🍪 [PROD] res.cookie called for auth. Checking res.getHeaders()...");
-      console.log("🍪 [PROD] Response headers after setting cookie:", res.getHeaders());
-    }
-
     res.status(200).json({
       success: true,
-      message: "Login successful",
+      token,
       user: { username: user.username, email: user.email },
     });
   } catch (error) {
@@ -180,34 +159,12 @@ exports.googleLogin = async (req, res) => {
       );
       console.log("✅ JWT token generated");
 
-      const isProd = process.env.NODE_ENV === "production";
-      const cookieOptions = {
-        httpOnly: true,
-        secure: isProd,
-        sameSite: isProd ? "None" : "Lax",
-        path: "/",
-        maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
-        // Don't set domain for cross-origin cookies - let browser handle it
-        ...(isProd && process.env.COOKIE_DOMAIN ? { domain: process.env.COOKIE_DOMAIN } : {})
-      };
-      if (isProd) {
-        console.log("🍪 [PROD] Setting cookie (Google login):", cookieOptions);
-        console.log("🍪 [PROD] Token:", token);
-        console.log("🍪 [PROD] COOKIE_DOMAIN:", process.env.COOKIE_DOMAIN);
-      }
-      res.cookie("auth", token, cookieOptions);
-      if (isProd) {
-        console.log("🍪 [PROD] res.cookie called for auth. Checking res.getHeaders()...");
-        console.log("🍪 [PROD] Response headers after setting cookie:", res.getHeaders());
-      }
-      console.log("✅ Auth cookie set");
-
       const finalProfileImage = userProfile?.profileImage || null;
       console.log("📤 Sending response with profile image:", finalProfileImage);
 
       return res.status(200).json({
         success: true,
-        message: "Google login successful",
+        token,
         user: { 
           username: user.username, 
           email: user.email,

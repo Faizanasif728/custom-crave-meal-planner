@@ -61,9 +61,7 @@ const useAuthStore = create((set) => ({
       console.log("🟠 [PROD] Document.cookie before API call:", document.cookie);
     }
     try {
-      const { data } = await api.get("/auth/get-profile", {
-        withCredentials: true,
-      });
+      const { data } = await api.get("/auth/get-profile");
       if (import.meta.env.MODE === "production") {
         console.log("🟠 [PROD] API response from /auth/get-profile:", data);
       }
@@ -104,7 +102,7 @@ const useAuthStore = create((set) => ({
   logout: async () => {
     try {
       // Call backend logout API
-      await api.post("/auth/logout", {}, { withCredentials: true });
+      await api.post("/auth/logout");
 
       // Sign out from Firebase (if applicable)
       await signOut(auth);
@@ -127,7 +125,6 @@ const useAuthStore = create((set) => ({
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
-          withCredentials: true,
         }
       );
 
@@ -151,9 +148,7 @@ const useAuthStore = create((set) => ({
 
   deleteProfileImage: async () => {
     try {
-      await api.delete("/users/delete-profile-image", {
-        withCredentials: true,
-      });
+      await api.delete("/users/delete-profile-image");
 
       // Update both user and profileImage state
       set((state) => ({
@@ -171,7 +166,7 @@ const useAuthStore = create((set) => ({
   deleteUser: async () => {
     try {
       // Call backend API to delete user
-      await api.delete("/users/delete-user", { withCredentials: true });
+      await api.delete("/users/delete-user");
 
       // Sign out from Firebase (if applicable)
       await signOut(auth);

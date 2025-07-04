@@ -122,9 +122,7 @@ const UpdateProfilePage = () => {
 
     setLoading(true);
     try {
-      const { data } = await api.put("/users/update-profile", formData, {
-        withCredentials: true,
-      });
+      const { data } = await api.put("/users/update-profile", formData);
       if (data?.message) {
         toast.success(data.message);
         // Update local user state if username or email was changed
@@ -149,7 +147,7 @@ const UpdateProfilePage = () => {
 
   const handleDeleteProfile = async () => {
     try {
-      await api.delete("/users/delete-user", { withCredentials: true });
+      await api.delete("/users/delete-user");
       await signOut(auth);
       setUser(null);
       setProfileImage(null);
